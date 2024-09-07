@@ -53,7 +53,7 @@ class TokenRefreshView(APIView):
     Handles the refresh of JWT tokens.
 
     Requires a refresh token to be provided in the request. If valid, it returns a new access token
-    and optionally a new refresh token if rotation is enabled.
+    and optionally a new refresh token.
     """
     def post(self, request):
         refresh_token = request.data.get('refresh')

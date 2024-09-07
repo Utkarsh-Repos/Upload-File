@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <meta name="csrf-token" content="{{ csrf_token }}">
 <style>
     body {
     font-family: Arial, sans-serif;
@@ -106,7 +106,15 @@ button:hover {
 
 
 <script>
+    var csrfToken = "{{ csrf_token }}";
     function login_submit() {
+       var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        });
+
         var email = $('#email').val();
         var password = $('#password').val();
         if (!email || !password) {
@@ -127,8 +135,11 @@ button:hover {
             data: jsonData,
             success: function(response) {
                 if (response.refresh && response.access) {
-                        localStorage.setItem('accessToken', response.access);
-                        localStorage.setItem('refreshToken', response.refresh);
+                        console.log('accessToken >>>>>', response.access);
+                        console.log('refreshToken >>>>>', response.refresh);
+                        $('#error-succ').text("Log in successful, access & refresh token's are in Console");
+                        $('#error-succ').css({'display': 'block'});
+                        $('#error-succ').css({'color': 'green'});
                     }
             },
             error: function(error) {
